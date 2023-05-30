@@ -7,7 +7,7 @@
  * Bu örnek sonradan gelecek olan görevleri nasıl çözeceğinizi size gösterecek.
  * 
  * Aşağdıaki Yüksek dereceden fonskiyonu(higher-order function) kullanarak aşağıdakileri yapınız
- *  1. Stringlerden oluşan bir array'i parametre olarak alın
+ *  1. Stringlerden oluşan bir array'i parametre olarak alınnp
  *  2. Bir string'i değişken olarak alan bir callback fonksiyonunu parametre olarak alın 
  *  3. Array'in İLK elemanını değişken olarak alarak çalışacak olan callback fonksiyonunun sonucunu dönün
  * 
@@ -29,11 +29,16 @@ console.log('örnek görev:', ilkiniDon(['as','sa'],function(metin){return metin
   
   Aşağıdaki skor1 ve skor2 kodlarını inceleyiniz ve aşağıdaki soruları altına not alarak cevaplayın
   
-  1. skor1 ve skor2 arasındaki fark nedir?
-  
+  1. skor1 ve skor2 arasındaki fark nedir? 
+  skor1de skoru functionun içinde (localde) tanımlayarak sabitledik. Burdaki skoru dışarıdan birisi okuyamıyor. scor globalde tekrar tanımlansa hata vermez.
+  skor2de skor parametresini global alanda tanımlama yaparak yazdırdık. Kodun alt satırlarında skor tekrardan tanımlanırsa, fonksiyon hata verir. Burdaki skora dışarıdan ulaşılabiliyor.
+   
   2. Hangisi bir closure kullanmaktadır? Nasıl tarif edebilirsin? (yarınki derste öğreneceksin :) )
+
+  skor1 bir closure kullanıyor çünkü skor1 değeri skorArtirici fonksiyonuna bağlanmış, skor değeri arttıkça fonsiyon güncellenecek ve bağlı olan skor1 de değişecek.
   
   3. Hangi durumda skor1 tercih edilebilir? Hangi durumda skor2 daha mantıklıdır?
+
 */
 
 // skor1 kodları
@@ -47,6 +52,7 @@ function skorArtirici() {
 const skor1 = skorArtirici();
 
 // skor2 kodları
+
 let skor = 0;
 
 function skor2() {
@@ -56,7 +62,7 @@ function skor2() {
 
 /* Görev 2: takimSkoru() 
 Aşağıdaki takimSkoru() fonksiyonununda aşağıdakileri yapınız:
-  1. Bir çeyrekte bir takımın ürettiği skoru rastgele(random) elde eden bir sonuc dönünüz(return)
+  1. Bir çeyrekte bir takımın ürettiği skoru rastgele(random) elde eden bir sonuc dönünüz(return) Math.random()
   
   Ön Bilgi: Bir çeyrekte takımlar ortalama 10 ile 25 sayı üretebiliyor
   Örnek: takimSkoru çağrıldığında 10-25 arasında bir skor dönmeli
@@ -64,12 +70,14 @@ Aşağıdaki takimSkoru() fonksiyonununda aşağıdakileri yapınız:
 Not: Bu fonskiyon, aşağıdaki diğer görevler için de bir callback fonksiyonu olarak da kullanılacak
 */
 
-function takimSkoru(/*Kodunuzu buraya yazınız*/){
-    /*Kodunuzu buraya yazınız*/
+function takimSkoru() {
+
+  const skor = Math.ceil(Math.random()* (25 - 10)) + 10 - 1;
+
+  return skor;
 }
 
-
-
+console.log ("takimskoru", takimSkoru());
 
 /* Görev 3: macSonucu() 
 Aşağıdaki macSonucu() fonksiyonununda aşağıdakileri yapınız:
@@ -79,17 +87,29 @@ Aşağıdaki macSonucu() fonksiyonununda aşağıdakileri yapınız:
   4. Her oynanan çeyrekten sonra EvSahibi ve KonukTakim için skoru güncelleyin
   5. Son çeyrekten sonra, maçın bitiş skorunu bir object olarak dönün(return)
 
-  Örneğin: macSonucu(takimSkoru, 4) çalıştırınca aşağıdaki object'i dönmeli
+  Örneğin: macSonucu(takimSkoru, 4 ) çalıştırınca aşağıdaki object'i dönmeli
 {
   "EvSahibi": 92,
   "KonukTakim": 80
 }
 */ 
 
-function macSonucu(/*Kodunuzu buraya yazınız*/){
-  /*Kodunuzu buraya yazınız*/
-}
+function macSonucu (takimSkoruFn, ceyrekSayisi) {
+  let  evSahibiSkor = 0;
+  let KonukTakimSkor = 0;
 
+        for (let i = 0; i < ceyrekSayisi; i++) {
+            evSahibiSkor = evSahibiSkor + takimSkoruFn ();
+            KonukTakimSkor = KonukTakimSkor + takimSkoruFn ();
+        }
+  return {
+    "EvSahibi": evSahibiSkor,
+    "KonukTakim": KonukTakimSkor,
+  }
+}
+console.log ("mac sonucu", macSonucu(takimSkoru, 4));
+// consol.logdaki takimSkoru = takimScoruFn
+//console.log ("takimskoru", takimSkoru());
 
 
 
@@ -109,11 +129,16 @@ Aşağıdaki periyotSkoru() fonksiyonununda aşağıdakileri yapınız:
   */
 
 
-function periyotSkoru(/*Kodunuzu buraya yazınız*/) {
-  /*Kodunuzu buraya yazınız*/
+function periyotSkoru(sonucUretenFn) {
+  
+  return {
+    EvSahibi : sonucUretenFn(),
+    KonukTakim : sonucUretenFn(),
+  };
 
 }
 
+console.log ("periyotSkoru", periyotSkoru(takimSkoru));
 
 /* Zorlayıcı Görev 5: skorTabelasi() 
 Aşağıdaki skorTabelasi() fonksiyonunu kullanarak aşağıdakileri yapınız:
@@ -123,6 +148,10 @@ Aşağıdaki skorTabelasi() fonksiyonunu kullanarak aşağıdakileri yapınız:
   4. Her bir çeyreğin sonucunu bir string olarak bir array içinde dönün. Aşadaki örnek gibi olmalı. Her çeyrekteki atılan sayıları ayrı ayrı yazmalı(toplam skoru değil!).
   5. Eğer maç berabere biterse uzatmalar oynanmalı ve "Uzatma 1: Ev Sahibi 13 - Konuk Takım 11" eklemeli. (Her uzatma için ayrı ayrı eklemeli)
   6. Maç bitince de final skoru yazmalı: "Maç Sonucu: Ev Sahibi 101 - Konuk Takım 98"
+
+
+
+
 
 MAÇ UZAMAZ ise skorTabelasi(periyotSkoru,takimSkoru,4)
   
@@ -146,12 +175,55 @@ MAÇ UZAR ise skorTabelasi(periyotSkoru,takimSkoru,4)
 ] */
 // NOTE: Bununla ilgili bir test yoktur. Eğer logladığınız sonuçlar yukarıdakine benziyor ise tmamlandı sayabilirsiniz.
 
-function skorTabelasi(/*Kodunuzu buraya yazınız*/) {
-  /*Kodunuzu buraya yazınız*/
+function skorTabelasi(periyotSkoruFn, takimSkoruFn, ceyrekSayisi) {
+  let tabelaPeriyot = {};
+  const skorTabelasi = [];
+
+  let evSahibiSkor = 0;
+  let KonukTakimSkor = 0;
+
+  for (let i = 0; i < ceyrekSayisi; i++) {
+    tabelaPeriyot = periyotSkoruFn(takimSkoruFn);
+    evSahibiSkor = evSahibiSkor + tabelaPeriyot.EvSahibi;
+    KonukTakimSkor = KonukTakimSkor + tabelaPeriyot.KonukTakim;
+    skorTabelasi.push(tabelaPeriyot);
+
+    console.log(
+      `${i + 1}. Periyot: Ev Sahibi ${tabelaPeriyot.EvSahibi} - Konuk Takım ${
+        tabelaPeriyot.KonukTakim
+      }`
+    );
+  }
+  let uzatmaSayisi = 0;
+  function uzatmaKontrol() {
+    if (evSahibiSkor === KonukTakimSkor) {
+      uzatmaSayisi++; // uzatmaSayisi = uzatmaSayisi + 1;
+      tabelaPeriyot = periyotSkoruFn(takimSkoruFn);
+      evSahibiSkor = evSahibiSkor + tabelaPeriyot.EvSahibi;
+      KonukTakimSkor = KonukTakimSkor + tabelaPeriyot.KonukTakim;
+      skorTabelasi.push(tabelaPeriyot);
+      console.log(
+        `${uzatmaSayisi}. Uzatma: Ev Sahibi ${tabelaPeriyot.EvSahibi} - Konuk Takım ${tabelaPeriyot.KonukTakim}`
+      );
+    }
+    // ilk kontrol sonrası tekrar kontrol etmek için
+    if (evSahibiSkor === KonukTakimSkor) {
+      // reqursive function
+      uzatmaKontrol();
+    }
+  }
+
+  uzatmaKontrol();
+
+  // console.log("skorTabelasi", skorTabelasi);
+  console.log(
+    `Maç Sonucu: Ev Sahibi ${evSahibiSkor} - Konuk Takım ${KonukTakimSkor}`
+  );
+
+  // console.log("toplamlar", evSahibiSkor, KonukTakimSkor);
 }
 
-
-
+console.log("skorTabelasi", skorTabelasi(periyotSkoru, takimSkoruMinimal, 4));
 
 /* Aşağıdaki satırları lütfen değiştirmeyiniz*/
 function sa(){
